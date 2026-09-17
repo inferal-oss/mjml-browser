@@ -56,9 +56,15 @@ async function run() {
   assertAsciiOnly(bundleBuffer)
 
   const bundleCode = bundleBuffer.toString('utf8')
-  const context = createBrowserContext()
+  assert.ok(
+    !/new Function\(["']return this["']\)/.test(bundleCode),
+    'mjml-browser bundle must not use webpack\'s dynamic global shim',
+  )
+  const context = vm.createContext(createBrowserContext(), {
+    codeGeneration: { strings: false, wasm: false },
+  })
 
-  vm.runInNewContext(bundleCode, context, { filename: 'lib/index.js' })
+  vm.runInContext(bundleCode, context, { filename: 'lib/index.js' })
 
   assert.strictEqual(
     typeof context.mjml,

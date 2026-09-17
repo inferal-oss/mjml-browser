@@ -30,6 +30,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
+      global: path.resolve(__dirname, 'browser-mocks/global'),
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer'],
     }),
@@ -39,6 +40,7 @@ module.exports = {
   ],
   node: {
     fs: false,
+    global: false,
     process: false,
     Buffer: false,
   },
